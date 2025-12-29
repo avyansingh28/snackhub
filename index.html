@@ -3,1977 +3,367 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SnackHub - Order Your Favorite Snacks</title>
-    
-    <!-- ============================================ -->
-    <!-- STYLES SECTION - ALL CSS GOES HERE -->
-    <!-- ============================================ -->
+    <title>SnackHub — Swiggy-like Demo</title>
+
+    <!-- Poppins font + Font Awesome icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="" crossorigin="anonymous">
+
     <style>
-        /* ===== RESET & BASE STYLES ===== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #ff8c42 0%, #c85a28 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            transition: background 0.3s;
-        }
-        
-        /* ===== LIGHT MODE STYLES ===== */
-        body.light-mode {
-            background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
-        }
-        
-        body.light-mode .main-app { background: #f5f5f5; }
-        body.light-mode .app-header { background: #ffffff; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        body.light-mode .app-header h1 { color: #333; }
-        body.light-mode .search-box { background: #e8e8e8; }
-        body.light-mode .search-box input { color: #333; }
-        body.light-mode .icon-btn { background: #e8e8e8; color: #333; }
-        body.light-mode .sidebar { background: #ffffff; border-right: 1px solid #e0e0e0; }
-        body.light-mode .menu-item { color: #333; }
-        body.light-mode .main-content { background: #f5f5f5; }
-        body.light-mode .product-card { background: #ffffff; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-        body.light-mode .product-name { color: #333; }
-        body.light-mode .product-qty-display { color: #333; }
-        body.light-mode .checkout-content { background: #ffffff; }
-        body.light-mode .checkout-content h2 { color: #333; }
-        body.light-mode .cart-item { background: #f5f5f5; }
-        body.light-mode .cart-item-info { color: #333; }
-        body.light-mode .checkout-form input { background: #f5f5f5; border-color: #e0e0e0; color: #333; }
-        body.light-mode .checkout-summary { background: #f5f5f5; }
-        body.light-mode .summary-row { color: #333; }
-        body.light-mode .payment-option { background: #f5f5f5; border-color: #e0e0e0; }
-        body.light-mode .payment-option.selected { background: #e8f5e9; border-color: #4caf50; }
-        body.light-mode .order-history-content { background: #ffffff; }
-        body.light-mode .order-history-content h2 { color: #333; }
-        body.light-mode .order-card { background: #f5f5f5; }
-        body.light-mode .order-header { border-bottom-color: #e0e0e0; }
-        body.light-mode .order-item { background: #ffffff; }
-        body.light-mode .order-item-name { color: #333; }
-        body.light-mode .order-total { background: #ffffff; }
-        body.light-mode .order-total-label { color: #333; }
-        body.light-mode .upi-modal-content { background: #ffffff; }
-        body.light-mode .upi-modal-content h2 { color: #333; }
-        body.light-mode .upi-amount { color: #333; }
-        body.light-mode .upi-apps { background: #f5f5f5; }
-        body.light-mode .upi-app { background: #ffffff; }
-        
-        /* ===== WELCOME SCREEN ===== */
-        .welcome-screen {
-            background: white;
-            border-radius: 20px;
-            padding: 50px;
-            text-align: center;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            max-width: 450px;
-            margin: 0 auto;
-        }
-        
-        .welcome-screen h1 {
-            color: #333;
-            font-size: 48px;
-            margin-bottom: 40px;
-            font-weight: 700;
-        }
-        
-        .welcome-screen input {
-            width: 100%;
-            padding: 15px 20px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 16px;
-            margin-bottom: 20px;
-            transition: border 0.3s;
-        }
-        
-        .welcome-screen input:focus {
-            outline: none;
-            border-color: #ff6b35;
-        }
-        
-        .btn-continue {
-            width: 100%;
-            padding: 15px;
-            background: #ff6b35;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 18px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        
-        .btn-continue:hover { background: #e55a28; }
-        
-        /* ===== MAIN APP LAYOUT ===== */
-        .main-app {
-            display: none;
-            width: 100%;
-            background: #2d2d2d;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
-        }
-        
-        /* ===== HEADER ===== */
-        .app-header {
-            background: #1a1a1a;
-            padding: 20px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-        
-        .app-header h1 {
-            color: white;
-            font-size: 32px;
-            font-weight: 700;
-        }
-        
-        .header-controls {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        
-        .search-box {
-            background: #3d3d3d;
-            padding: 12px 20px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            min-width: 250px;
-        }
-        
-        .search-box input {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 16px;
-            width: 100%;
-            outline: none;
-        }
-        
-        .search-box input::placeholder { color: #999; }
-        
-        .icon-btn {
-            background: #3d3d3d;
-            border: none;
-            color: white;
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            transition: background 0.3s;
-        }
-        
-        .icon-btn:hover { background: #4d4d4d; }
-        
-        .btn-order-history {
-            background: #ff6b35;
-            border: none;
-            color: white;
-            padding: 12px 20px;
-            border-radius: 10px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            transition: background 0.3s;
-        }
-        
-        .btn-order-history:hover { background: #e55a28; }
-        
-        /* ===== CONTENT AREA ===== */
-        .app-content {
-            display: flex;
-            height: calc(100vh - 200px);
-            max-height: 700px;
-        }
-        
-        /* ===== SIDEBAR ===== */
-        .sidebar {
-            background: #3d3d3d;
-            width: 250px;
-            padding: 20px 0;
-            overflow-y: auto;
-        }
-        
-        .menu-item {
-            padding: 18px 30px;
-            color: white;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            font-size: 18px;
-            transition: background 0.3s;
-            border-left: 4px solid transparent;
-        }
-        
-        .menu-item:hover { background: #4d4d4d; }
-        .menu-item.active { background: #ff6b35; border-left-color: #ff8c42; }
-        .menu-item-icon { font-size: 24px; }
-        
-        /* ===== MAIN CONTENT ===== */
-        .main-content {
-            flex: 1;
-            padding: 30px;
-            overflow-y: auto;
-        }
-        
-        .hero-banner {
-            width: 100%;
-            height: 200px;
-            background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
-            background-size: 200% 200%;
-            border-radius: 15px;
-            margin-bottom: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 48px;
-            color: white;
-            font-weight: 700;
-            text-shadow: 2px 2px 10px rgba(0,0,0,0.3);
-            animation: gradientShift 5s ease infinite;
-        }
-        
-        @keyframes gradientShift {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-        
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        
-        /* ===== PRODUCT CARDS ===== */
-        .product-card {
-            background: #4d4d4d;
-            border-radius: 15px;
-            overflow: hidden;
-            cursor: pointer;
-            transition: transform 0.3s, box-shadow 0.3s;
-            position: relative;
-            animation: fadeInUp 0.6s ease-out forwards;
-            opacity: 0;
-        }
-        
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .product-card:nth-child(1) { animation-delay: 0.1s; }
-        .product-card:nth-child(2) { animation-delay: 0.15s; }
-        .product-card:nth-child(3) { animation-delay: 0.2s; }
-        .product-card:nth-child(4) { animation-delay: 0.25s; }
-        .product-card:nth-child(5) { animation-delay: 0.3s; }
-        .product-card:nth-child(6) { animation-delay: 0.35s; }
-        .product-card:nth-child(7) { animation-delay: 0.4s; }
-        .product-card:nth-child(8) { animation-delay: 0.45s; }
-        
-        .product-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 15px 40px rgba(255, 107, 53, 0.4);
-        }
-        
-        .product-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.5s;
-        }
-        
-        .product-card:hover::before { left: 100%; }
-        
-        .product-image {
-            width: 100%;
-            height: 180px;
-            background: #f5f5f5;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .product-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s ease;
-        }
-        
-        .product-card:hover .product-image img {
-            transform: scale(1.1) rotate(2deg);
-        }
-        
-        .discount-badge {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: linear-gradient(135deg, #ff3b3b 0%, #ff6b6b 100%);
-            color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-weight: 700;
-            font-size: 14px;
-            box-shadow: 0 4px 15px rgba(255, 59, 59, 0.4);
-            animation: pulse 2s ease-in-out infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-        
-        .product-info { padding: 20px; }
-        
-        .product-name {
-            color: white;
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-        
-        .product-price {
-            color: #ff8c42;
-            font-size: 22px;
-            font-weight: 700;
-            margin-bottom: 15px;
-        }
-        
-        .product-actions {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-        
-        .product-qty-btn {
-            background: #ff6b35;
-            border: none;
-            color: white;
-            width: 35px;
-            height: 35px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 18px;
-            font-weight: 700;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .product-qty-btn:hover { background: #e55a28; transform: scale(1.1); }
-        .product-qty-btn:active { transform: scale(0.95); }
-        .product-qty-btn:disabled { background: #666; cursor: not-allowed; opacity: 0.5; transform: scale(1); }
-        
-        .product-qty-display {
-            color: white;
-            font-size: 18px;
-            font-weight: 600;
-            min-width: 30px;
-            text-align: center;
-        }
-        
-        /* ===== CART ICON ===== */
-        .cart-icon {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.4);
-            transition: all 0.3s;
-            font-size: 28px;
-            color: white;
-            animation: float 3s ease-in-out infinite;
-            z-index: 999;
-        }
-        
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-        
-        .cart-icon:hover {
-            transform: scale(1.15) rotate(5deg);
-            box-shadow: 0 15px 40px rgba(255, 107, 53, 0.6);
-        }
-        
-        .cart-icon:active { transform: scale(1.05); }
-        
-        .cart-count {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background: #ff3b3b;
-            color: white;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            font-weight: 700;
-            animation: bounce 0.5s ease;
-        }
-        
-        @keyframes bounce {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.3); }
-        }
-        
-        /* ===== CHECKOUT MODAL ===== */
-        .checkout-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.8);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        
-        .checkout-content {
-            background: #2d2d2d;
-            border-radius: 20px;
-            padding: 40px;
-            max-width: 600px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        
-        .checkout-content h2 {
-            color: white;
-            font-size: 32px;
-            margin-bottom: 30px;
-            text-align: center;
-        }
-        
-        .cart-item {
-            background: #3d3d3d;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        
-        .cart-item-info {
-            color: white;
-            flex: 1;
-        }
-        
-        .cart-item-name {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-        
-        .cart-item-price {
-            font-size: 16px;
-            color: #ff8c42;
-            font-weight: 600;
-        }
-        
-        .cart-item-controls {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .qty-btn {
-            background: #ff6b35;
-            border: none;
-            color: white;
-            width: 35px;
-            height: 35px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 18px;
-            font-weight: 700;
-            transition: background 0.3s;
-        }
-        
-        .qty-btn:hover { background: #e55a28; }
-        
-        .qty-display {
-            color: white;
-            font-size: 18px;
-            font-weight: 600;
-            min-width: 40px;
-            text-align: center;
-        }
-        
-        .remove-btn {
-            background: #ff3b3b;
-            border: none;
-            color: white;
-            width: 35px;
-            height: 35px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 18px;
-        }
-        
-        .checkout-form { margin: 30px 0; }
-        
-        .checkout-form input {
-            width: 100%;
-            padding: 15px;
-            background: #3d3d3d;
-            border: 2px solid #4d4d4d;
-            border-radius: 10px;
-            color: white;
-            font-size: 16px;
-            margin-bottom: 15px;
-        }
-        
-        .checkout-form input::placeholder { color: #999; }
-        .checkout-form input:focus { outline: none; border-color: #ff6b35; }
-        
-        /* ===== PAYMENT SECTION ===== */
-        .payment-section { margin: 30px 0; }
-        
-        .payment-section h3 {
-            color: white;
-            font-size: 20px;
-            margin-bottom: 20px;
-        }
-        
-        .payment-options {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        
-        .payment-option {
-            background: #3d3d3d;
-            border: 2px solid #4d4d4d;
-            border-radius: 10px;
-            padding: 20px;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        
-        .payment-option:hover { border-color: #ff6b35; }
-        .payment-option.selected { background: #2e5f3e; border-color: #4caf50; }
-        
-        .payment-radio {
-            width: 24px;
-            height: 24px;
-            border: 2px solid #999;
-            border-radius: 50%;
-            position: relative;
-        }
-        
-        .payment-option.selected .payment-radio { border-color: #4caf50; }
-        
-        .payment-option.selected .payment-radio::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 12px;
-            height: 12px;
-            background: #4caf50;
-            border-radius: 50%;
-        }
-        
-        .payment-info { flex: 1; }
-        
-        .payment-name {
-            color: white;
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-        
-        .payment-desc {
-            color: #999;
-            font-size: 14px;
-        }
-        
-        .payment-icon { font-size: 32px; }
-        
-        .checkout-summary {
-            background: #3d3d3d;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-        
-        .summary-row {
-            display: flex;
-            justify-content: space-between;
-            color: white;
-            font-size: 18px;
-            margin-bottom: 10px;
-        }
-        
-        .summary-row.total {
-            font-size: 24px;
-            font-weight: 700;
-            color: #ff8c42;
-            margin-top: 10px;
-            padding-top: 10px;
-            border-top: 2px solid #4d4d4d;
-        }
-        
-        .checkout-actions {
-            display: flex;
-            gap: 15px;
-        }
-        
-        .btn-place-order {
-            flex: 1;
-            padding: 18px;
-            background: #ff6b35;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 18px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        
-        .btn-place-order:hover { background: #e55a28; }
-        .btn-place-order:disabled { background: #666; cursor: not-allowed; }
-        
-        .btn-cancel {
-            padding: 18px 30px;
-            background: #5d5d5d;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 18px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        
-        .btn-cancel:hover { background: #6d6d6d; }
-        
-        /* ===== UPI PAYMENT MODAL ===== */
-        .upi-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.95);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        
-        .upi-modal-content {
-            background: #2d2d2d;
-            border-radius: 20px;
-            padding: 40px;
-            max-width: 500px;
-            width: 100%;
-            text-align: center;
-        }
-        
-        .upi-modal-content h2 {
-            color: white;
-            font-size: 28px;
-            margin-bottom: 20px;
-        }
-        
-        .upi-amount {
-            color: white;
-            font-size: 48px;
-            font-weight: 700;
-            margin-bottom: 30px;
-            color: #ff8c42;
-        }
-        
-        .upi-qr {
-            background: white;
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 30px;
-            display: inline-block;
-        }
-        
-        .upi-qr-placeholder {
-            width: 200px;
-            height: 200px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 80px;
-            color: white;
-        }
-        
-        .upi-id {
-            color: #999;
-            font-size: 14px;
-            margin-bottom: 30px;
-        }
-        
-        .upi-apps {
-            background: #3d3d3d;
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 30px;
-        }
-        
-        .upi-apps-title {
-            color: white;
-            font-size: 16px;
-            margin-bottom: 15px;
-            font-weight: 600;
-        }
-        
-        .upi-apps-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-        }
-        
-        .upi-app {
-            background: #4d4d4d;
-            padding: 15px;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .upi-app:hover {
-            background: #5d5d5d;
-            transform: scale(1.05);
-        }
-        
-        .upi-app-icon {
-            font-size: 32px;
-        }
-        
-        .upi-app-name {
-            color: white;
-            font-size: 12px;
-            font-weight: 600;
-        }
-        
-        .upi-processing {
-            display: none;
-            color: white;
-            font-size: 18px;
-            margin: 20px 0;
-        }
-        
-        .upi-spinner {
-            border: 4px solid #4d4d4d;
-            border-top: 4px solid #ff6b35;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        .upi-actions {
-            display: flex;
-            gap: 15px;
-        }
-        
-        .btn-cancel-payment {
-            flex: 1;
-            padding: 15px;
-            background: #5d5d5d;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        
-        .btn-cancel-payment:hover { background: #6d6d6d; }
-        
-        /* ===== SUCCESS MODAL ===== */
-        .success-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.9);
-            z-index: 2500;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .success-content {
-            text-align: center;
-            padding: 60px;
-            animation: celebrate 1s ease-in-out;
-        }
-        
-        @keyframes celebrate {
-            0% { transform: scale(0.5); opacity: 0; }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); opacity: 1; }
-        }
-        
-        .success-icon {
-            width: 150px;
-            height: 150px;
-            background: #4caf50;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 30px;
-            font-size: 80px;
-            color: white;
-            box-shadow: 0 0 50px rgba(76, 175, 80, 0.6);
-        }
-        
-        .success-content h2 {
-            color: white;
-            font-size: 42px;
-            margin-bottom: 15px;
-        }
-        
-        .success-content p {
-            color: #ccc;
-            font-size: 24px;
-        }
-        
-        .btn-view-order {
-            margin-top: 30px;
-            padding: 15px 40px;
-            background: #ff6b35;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 18px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        
-        .btn-view-order:hover { background: #e55a28; }
-        
-        /* ===== ORDER HISTORY MODAL ===== */
-        .order-history-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.8);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        
-        .order-history-content {
-            background: #2d2d2d;
-            border-radius: 20px;
-            padding: 40px;
-            max-width: 800px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        
-        .order-history-content h2 {
-            color: white;
-            font-size: 32px;
-            margin-bottom: 30px;
-            text-align: center;
-        }
-        
-        .order-card {
-            background: #3d3d3d;
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 20px;
-        }
-        
-        .order-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #4d4d4d;
-        }
-        
-        .order-number {
-            color: #ff8c42;
-            font-size: 20px;
-            font-weight: 700;
-        }
-        
-        .order-date {
-            color: #999;
-            font-size: 14px;
-        }
-        
-        .order-items-list {
-            margin-bottom: 20px;
-        }
-        
-        .order-item {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 15px;
-            padding: 10px;
-            background: #4d4d4d;
-            border-radius: 10px;
-        }
-        
-        .order-item-image {
-            width: 60px;
-            height: 60px;
-            border-radius: 8px;
-            object-fit: cover;
-        }
-        
-        .order-item-details { flex: 1; }
-        
-        .order-item-name {
-            color: white;
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-        
-        .order-item-qty {
-            color: #999;
-            font-size: 14px;
-        }
-        
-        .order-item-price {
-            color: #ff8c42;
-            font-size: 18px;
-            font-weight: 700;
-        }
-        
-        .order-total {
-            display: flex;
-            justify-content: space-between;
-            padding: 15px;
-            background: #4d4d4d;
-            border-radius: 10px;
-            margin-top: 15px;
-        }
-        
-        .order-total-label {
-            color: white;
-            font-size: 18px;
-            font-weight: 600;
-        }
-        
-        .order-total-amount {
-            color: #ff8c42;
-            font-size: 22px;
-            font-weight: 700;
-        }
-        
-        .btn-close-history {
-            width: 100%;
-            padding: 15px;
-            background: #5d5d5d;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 18px;
-            font-weight: 700;
-            cursor: pointer;
-            margin-top: 20px;
-            transition: background 0.3s;
-        }
-        
-        .btn-close-history:hover { background: #6d6d6d; }
-        
-        .confetti {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            background: #ff6b35;
-            animation: confetti-fall 3s linear infinite;
-        }
-        
-        @keyframes confetti-fall {
-            to { transform: translateY(100vh) rotate(360deg); }
-        }
-        
-        .empty-cart {
-            text-align: center;
-            padding: 60px 20px;
-            color: #999;
-        }
-        
-        .empty-cart-icon {
-            font-size: 80px;
-            margin-bottom: 20px;
-        }
-        
-        .empty-cart p {
-            font-size: 20px;
-        }
-        
-        /* ===== MOBILE RESPONSIVE ===== */
-        @media (max-width: 768px) {
-            body { padding: 0; }
-            
-            .welcome-screen {
-                padding: 30px;
-                border-radius: 0;
-                min-height: 100vh;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-            }
-            
-            .welcome-screen h1 { font-size: 36px; }
-            
-            .main-app {
-                border-radius: 0;
-                min-height: 100vh;
-            }
-            
-            .app-header {
-                padding: 15px;
-            }
-            
-            .app-header h1 {
-                font-size: 24px;
-                width: 100%;
-            }
-            
-            .header-controls {
-                width: 100%;
-                justify-content: space-between;
-            }
-            
-            .search-box {
-                min-width: auto;
-                flex: 1;
-            }
-            
-            .btn-order-history {
-                font-size: 0;
-                padding: 12px;
-            }
-            
-            .btn-order-history::before {
-                content: '📋';
-                font-size: 20px;
-            }
-            
-            .app-content {
-                flex-direction: column;
-                height: auto;
-                max-height: none;
-                min-height: calc(100vh - 120px);
-            }
-            
-            .sidebar {
-                width: 100%;
-                display: flex;
-                overflow-x: auto;
-                padding: 10px;
-                scrollbar-width: none;
-                -ms-overflow-style: none;
-            }
-            
-            .sidebar::-webkit-scrollbar {
-                display: none;
-            }
-            
-            .menu-item {
-                white-space: nowrap;
-                padding: 12px 20px;
-                border-left: none;
-                border-bottom: 4px solid transparent;
-            }
-            
-            .menu-item.active {
-                border-left: none;
-                border-bottom-color: #ff8c42;
-            }
-            
-            .main-content {
-                padding: 15px;
-            }
-            
-            .hero-banner {
-                height: 120px;
-                font-size: 24px;
-            }
-            
-            .products-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 10px;
-            }
-            
-            .product-image {
-                height: 120px;
-            }
-            
-            .product-info {
-                padding: 12px;
-            }
-            
-            .product-name {
-                font-size: 14px;
-            }
-            
-            .product-price {
-                font-size: 18px;
-            }
-            
-            .product-qty-btn {
-                width: 30px;
-                height: 30px;
-                font-size: 16px;
-            }
-            
-            .product-qty-display {
-                font-size: 16px;
-                min-width: 25px;
-            }
-            
-            .cart-icon {
-                width: 60px;
-                height: 60px;
-                bottom: 20px;
-                right: 20px;
-                font-size: 24px;
-            }
-            
-            .cart-count {
-                width: 24px;
-                height: 24px;
-                font-size: 12px;
-            }
-            
-            .checkout-content,
-            .upi-modal-content,
-            .order-history-content {
-                padding: 20px;
-                border-radius: 20px 20px 0 0;
-                max-height: 95vh;
-            }
-            
-            .checkout-content h2,
-            .upi-modal-content h2,
-            .order-history-content h2 {
-                font-size: 24px;
-            }
-            
-            .cart-item {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 15px;
-            }
-            
-            .cart-item-controls {
-                width: 100%;
-                justify-content: space-between;
-            }
-            
-            .checkout-actions {
-                flex-direction: column;
-            }
-            
-            .upi-amount {
-                font-size: 36px;
-            }
-            
-            .upi-qr-placeholder {
-                width: 150px;
-                height: 150px;
-                font-size: 60px;
-            }
-            
-            .upi-apps-grid {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 10px;
-            }
-            
-            .success-content {
-                padding: 40px 20px;
-            }
-            
-            .success-icon {
-                width: 100px;
-                height: 100px;
-                font-size: 50px;
-            }
-            
-            .success-content h2 {
-                font-size: 28px;
-            }
-            
-            .success-content p {
-                font-size: 18px;
-            }
-        }
+    :root{
+      --bg: #ffffff;
+      --page-bg: #f7f7f8;
+      --primary: #fc8019; /* Swiggy orange */
+      --primary-dark: #e06b12;
+      --muted: #6b6b6b;
+      --card-bg: #ffffff;
+      --shadow: 0 6px 20px rgba(18,18,18,0.06);
+      --radius: 12px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+      background:var(--page-bg);
+      color:#111;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      padding-bottom:120px; /* space for bottom nav */
+    }
+
+    .container{max-width:1200px;margin:0 auto;padding:18px;}
+
+    /* Header */
+    .header{position:sticky;top:0;z-index:50;background:linear-gradient(180deg, rgba(255,255,255,0.85), rgba(255,255,255,0.75));backdrop-filter:blur(6px);padding:14px 18px;border-bottom:1px solid rgba(0,0,0,0.04)}
+    .header-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .location{display:flex;align-items:center;gap:10px}
+    .location .pin{color:var(--primary);font-weight:700}
+    .search{display:flex;align-items:center;gap:10px;background:#fff;padding:10px 12px;border-radius:14px;box-shadow:var(--shadow);flex:1;max-width:720px}
+    .search input{border:0;outline:0;font-size:15px;width:100%}
+    .header-actions{display:flex;align-items:center;gap:12px}
+    .avatar{width:40px;height:40px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow)}
+
+    /* chips */
+    .chips{display:flex;gap:10px;overflow-x:auto;padding:12px 0 6px}
+    .chip{background:#fff;border-radius:999px;padding:8px 14px;font-weight:600;font-size:14px;box-shadow:var(--shadow);white-space:nowrap;cursor:pointer}
+    .chip.active{background:linear-gradient(90deg,var(--primary),var(--primary-dark));color:#fff}
+
+    /* layout */
+    .restaurants{display:grid;grid-template-columns:1fr 360px;gap:20px;align-items:start;margin-top:14px}
+    .left-col{display:flex;flex-direction:column;gap:14px}
+    .list{display:flex;flex-direction:column;gap:14px}
+
+    /* restaurant card */
+    .restaurant-card{background:var(--card-bg);border-radius:var(--radius);overflow:hidden;display:flex;gap:14px;padding:12px;box-shadow:var(--shadow);transition:transform .18s ease,box-shadow .18s ease}
+    .restaurant-card:hover{transform:translateY(-6px);box-shadow:0 12px 30px rgba(18,18,18,0.12)}
+    .restaurant-thumb{width:120px;height:90px;border-radius:10px;overflow:hidden;flex-shrink:0;background:#eee}
+    .restaurant-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+    .restaurant-info{display:flex;flex-direction:column;gap:6px;flex:1}
+    .r-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+    .name{font-weight:700;font-size:16px}
+    .meta{color:var(--muted);font-size:13px}
+    .pills{display:flex;gap:8px;align-items:center}
+    .badge{background:#fff8f2;color:var(--primary);font-weight:700;padding:4px 8px;border-radius:8px;font-size:12px}
+    .rating{background:#f7fdf6;color:#2b7a3a;padding:6px 8px;border-radius:8px;font-weight:700;font-size:13px;display:inline-flex;gap:8px;align-items:center}
+
+    .cuisine-chips{display:flex;gap:8px;flex-wrap:wrap}
+    .cuisine-chip{background:#f2f2f2;padding:6px 8px;border-radius:6px;font-size:12px;color:var(--muted)}
+
+    /* right column */
+    .right-col{position:sticky;top:84px;align-self:start}
+    .card-elev{background:var(--card-bg);padding:16px;border-radius:12px;box-shadow:var(--shadow)}
+    .cart-summary h3{margin:0 0 8px 0}
+    .cart-items{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+    .cart-item{display:flex;gap:10px;align-items:center}
+    .cart-item img{width:48px;height:48px;border-radius:8px;object-fit:cover}
+    .cart-item .meta{font-size:13px}
+
+    /* bottom nav */
+    .bottom-nav{position:fixed;left:0;right:0;bottom:0;height:72px;display:flex;justify-content:center;align-items:center;padding:10px 22px;background:linear-gradient(180deg, rgba(255,255,255,0.95), #fff);box-shadow:0 -6px 24px rgba(0,0,0,0.06)}
+    .bottom-nav-inner{max-width:900px;width:100%;display:flex;justify-content:space-between;align-items:center;gap:10px}
+    .nav-btn{background:transparent;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:6px;font-size:12px;padding:6px 8px;border-radius:8px}
+    .nav-btn.active{color:var(--primary);font-weight:700}
+
+    /* cart fab */
+    .cart-fab{position:fixed;right:20px;bottom:92px;background:var(--primary);color:#fff;width:62px;height:62px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 12px 30px rgba(252,128,25,0.18);font-size:20px;z-index:60}
+    .cart-count{position:absolute;top:-6px;right:-6px;background:#fff;color:var(--primary);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;box-shadow:0 4px 12px rgba(0,0,0,0.08);font-size:12px}
+
+    /* responsive */
+    @media (max-width:980px){
+      .restaurants{grid-template-columns:1fr}
+      .right-col{display:none}
+      .container{padding:12px}
+      .search{max-width:none}
+    }
+
+    /* small utilities */
+    .muted{color:var(--muted)}
+    .btn{background:var(--primary);color:#fff;border:0;padding:10px 14px;border-radius:10px;cursor:pointer}
     </style>
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </head>
 <body>
-    <!-- ============================================ -->
-    <!-- HTML STRUCTURE - ALL MARKUP GOES HERE -->
-    <!-- ============================================ -->
-    
-    <!-- Welcome Screen -->
-    <div id="welcomeScreen" class="welcome-screen">
-        <h1>SnackHub</h1>
-        <input type="text" id="userName" placeholder="Your name" />
-        <button class="btn-continue" onclick="startApp()">Continue</button>
-    </div>
-    
-    <!-- Main App -->
-    <div id="mainApp" class="main-app">
-        <div class="app-header">
-            <h1>SnackHub</h1>
-            <div class="header-controls">
-                <div class="search-box">
-                    <span>🔍</span>
-                    <input type="text" placeholder="Search snacks..." id="searchInput" />
-                </div>
-                <button class="btn-order-history" onclick="openOrderHistory()">
-                    📋 Orders
-                </button>
-                <button class="icon-btn" title="Profile">👤</button>
-                <button class="icon-btn" onclick="toggleDarkMode()" title="Toggle Theme">🌙</button>
+
+    <header class="header">
+      <div class="header-inner container">
+        <div style="display:flex;align-items:center;gap:12px;flex:1;">
+          <div class="location" aria-hidden="true">
+            <i class="fa-solid fa-location-dot pin"></i>
+            <div style="display:flex;flex-direction:column">
+              <small class="muted">Deliver to</small>
+              <strong>Current location</strong>
             </div>
+          </div>
+
+          <div class="search" role="search">
+            <i class="fa-solid fa-magnifying-glass" style="color:var(--muted)"></i>
+            <input id="searchInput" type="search" placeholder="Search for restaurants, cuisines or dishes" aria-label="Search">
+            <button class="btn" id="searchBtn" style="flex-shrink:0">Search</button>
+          </div>
         </div>
-        <div class="app-content">
-            <div class="sidebar">
-                <div class="menu-item active" onclick="filterCategory('all')">
-                    <span class="menu-item-icon">🏠</span>
-                    <span>All</span>
-                </div>
-                <div class="menu-item" onclick="filterCategory('chips')">
-                    <span class="menu-item-icon">🥔</span>
-                    <span>Chips</span>
-                </div>
-                <div class="menu-item" onclick="filterCategory('drinks')">
-                    <span class="menu-item-icon">🥤</span>
-                    <span>Drinks</span>
-                </div>
-                <div class="menu-item" onclick="filterCategory('chocolates')">
-                    <span class="menu-item-icon">🍫</span>
-                    <span>Chocolates</span>
-                </div>
-                <div class="menu-item" onclick="filterCategory('combos')">
-                    <span class="menu-item-icon">🍔</span>
-                    <span>Combos</span>
-                </div>
-            </div>
-            <div class="main-content">
-                <div class="hero-banner">🌮 Delicious Snacks Await! 🍹</div>
-                <div id="productsGrid" class="products-grid"></div>
-            </div>
+
+        <div class="header-actions">
+          <div class="avatar" title="Offers"><i class="fa-solid fa-tags" style="color:var(--primary)"></i></div>
+          <div class="avatar" title="Profile"><i class="fa-solid fa-user" style="color:var(--primary)"></i></div>
         </div>
-    </div>
-    
-    <!-- Cart Icon -->
-    <div class="cart-icon" id="cartIcon" onclick="openCheckout()" style="display: none;">
-        🛒
-        <span class="cart-count" id="cartCount">0</span>
-    </div>
-    
-    <!-- Checkout Modal -->
-    <div class="checkout-modal" id="checkoutModal">
-        <div class="checkout-content">
-            <h2>Checkout</h2>
-            <div id="cartItems"></div>
-            <div class="checkout-form">
-                <input type="tel" id="phoneNumber" placeholder="Phone number" />
-                <input type="text" id="deliveryAddress" placeholder="Delivery address" />
-            </div>
-            <div class="payment-section">
-                <h3>Select Payment Method</h3>
-                <div class="payment-options">
-                    <div class="payment-option" onclick="selectPayment('upi')">
-                        <div class="payment-radio"></div>
-                        <div class="payment-info">
-                            <div class="payment-name">UPI Payment</div>
-                            <div class="payment-desc">Google Pay, PhonePe, Paytm</div>
-                        </div>
-                        <div class="payment-icon">📱</div>
-                    </div>
-                    <div class="payment-option" onclick="selectPayment('cod')">
-                        <div class="payment-radio"></div>
-                        <div class="payment-info">
-                            <div class="payment-name">Cash on Delivery</div>
-                            <div class="payment-desc">Pay when you receive</div>
-                        </div>
-                        <div class="payment-icon">💵</div>
-                    </div>
-                </div>
-            </div>
-            <div class="checkout-summary">
-                <div class="summary-row">
-                    <span>Items Total:</span>
-                    <span id="itemsTotal">₹ 0</span>
-                </div>
-                <div class="summary-row">
-                    <span>Delivery Fee:</span>
-                    <span>₹ 10</span>
-                </div>
-                <div class="summary-row total">
-                    <span>Grand Total:</span>
-                    <span id="grandTotal">₹ 10</span>
-                </div>
-            </div>
-            <div class="checkout-actions">
-                <button class="btn-place-order" id="placeOrderBtn" onclick="placeOrder()" disabled>Place Order</button>
-                <button class="btn-cancel" onclick="closeCheckout()">Cancel</button>
-            </div>
+      </div>
+
+      <div class="container">
+        <div class="chips" aria-label="categories">
+          <div class="chip active">Top Picks</div>
+          <div class="chip">Veg</div>
+          <div class="chip">Fast Food</div>
+          <div class="chip">Biryani</div>
+          <div class="chip">Desserts</div>
+          <div class="chip">Healthy</div>
+          <div class="chip">Beverages</div>
         </div>
-    </div>
-    
-    <!-- UPI Payment Modal -->
-    <div class="upi-modal" id="upiModal">
-        <div class="upi-modal-content">
-            <h2>UPI Payment</h2>
-            <div class="upi-amount" id="upiAmount">₹ 0</div>
-            <div class="upi-qr">
-                <div class="upi-qr-placeholder">📱</div>
-            </div>
-            <div class="upi-id">UPI ID: snackhub@upi</div>
-            
-            <div class="upi-apps">
-                <div class="upi-apps-title">Or pay using app</div>
-                <div class="upi-apps-grid">
-                    <div class="upi-app" onclick="processUPIPayment('gpay')">
-                        <div class="upi-app-icon">🟦</div>
-                        <div class="upi-app-name">GPay</div>
-                    </div>
-                    <div class="upi-app" onclick="processUPIPayment('phonepe')">
-                        <div class="upi-app-icon">🟪</div>
-                        <div class="upi-app-name">PhonePe</div>
-                    </div>
-                    <div class="upi-app" onclick="processUPIPayment('paytm')">
-                        <div class="upi-app-icon">🔵</div>
-                        <div class="upi-app-name">Paytm</div>
-                    </div>
+      </div>
+    </header>
+
+    <main class="container">
+      <div class="restaurants">
+        <div class="left-col">
+          <div class="list" id="restaurantList">
+
+            <!-- Example restaurant cards -->
+            <article class="restaurant-card" data-name="The Crispy Corner" data-cuisines="Burgers,Fast Food,North Indian">
+              <div class="restaurant-thumb"><img src="https://images.unsplash.com/photo-1604908177522-5e3b1d09c2a9?q=80&w=800&auto=format&fit=crop" alt="The Crispy Corner"></div>
+              <div class="restaurant-info">
+                <div class="r-top">
+                  <div>
+                    <div class="name">The Crispy Corner</div>
+                    <div class="meta">Burgers • Fast Food • North Indian</div>
+                  </div>
+                  <div style="text-align:right">
+                    <div class="rating"><i class="fa-solid fa-star" style="color:#ffb400;font-size:12px"></i> 4.4</div>
+                    <div class="meta" style="margin-top:8px">25–35 min • 2.1 km</div>
+                  </div>
                 </div>
-            </div>
-            
-            <div class="upi-processing" id="upiProcessing">
-                <div class="upi-spinner"></div>
-                <p>Processing payment...</p>
-            </div>
-            
-            <div class="upi-actions">
-                <button class="btn-cancel-payment" onclick="cancelUPIPayment()">Cancel</button>
-            </div>
+
+                <div class="pills">
+                  <div class="badge">30% OFF</div>
+                  <div class="meta">₹200 for two</div>
+                </div>
+
+                <div class="cuisine-chips" style="margin-top:8px">
+                  <div class="cuisine-chip">Burgers</div>
+                  <div class="cuisine-chip">Fries</div>
+                </div>
+              </div>
+            </article>
+
+            <article class="restaurant-card" data-name="Spice Biryani House" data-cuisines="Biryani,Indian">
+              <div class="restaurant-thumb"><img src="https://images.unsplash.com/photo-1603477902273-78a2a6a7fb0a?q=80&w=800&auto=format&fit=crop" alt="Spice Biryani House"></div>
+              <div class="restaurant-info">
+                <div class="r-top">
+                  <div>
+                    <div class="name">Spice Biryani House</div>
+                    <div class="meta">Biryani • Hyderabadi • Kebabs</div>
+                  </div>
+                  <div style="text-align:right">
+                    <div class="rating"><i class="fa-solid fa-star" style="color:#ffb400;font-size:12px"></i> 4.6</div>
+                    <div class="meta" style="margin-top:8px">30–40 min • 3.0 km</div>
+                  </div>
+                </div>
+
+                <div class="pills">
+                  <div class="badge">FREE Delivery</div>
+                  <div class="meta">₹350 for two</div>
+                </div>
+
+                <div class="cuisine-chips" style="margin-top:8px">
+                  <div class="cuisine-chip">Biryani</div>
+                  <div class="cuisine-chip">Kofta</div>
+                </div>
+              </div>
+            </article>
+
+            <article class="restaurant-card" data-name="Sweet Tooth Desserts" data-cuisines="Desserts,Bakery">
+              <div class="restaurant-thumb"><img src="https://images.unsplash.com/photo-1541558611263-4e4e0f792b5d?q=80&w=800&auto=format&fit=crop" alt="Sweet Tooth"></div>
+              <div class="restaurant-info">
+                <div class="r-top">
+                  <div>
+                    <div class="name">Sweet Tooth Desserts</div>
+                    <div class="meta">Desserts • Bakery • Ice Cream</div>
+                  </div>
+                  <div style="text-align:right">
+                    <div class="rating"><i class="fa-solid fa-star" style="color:#ffb400;font-size:12px"></i> 4.2</div>
+                    <div class="meta" style="margin-top:8px">20–28 min • 1.2 km</div>
+                  </div>
+                </div>
+
+                <div class="pills">
+                  <div class="badge">20% OFF</div>
+                  <div class="meta">₹150 for two</div>
+                </div>
+
+                <div class="cuisine-chips" style="margin-top:8px">
+                  <div class="cuisine-chip">Desserts</div>
+                  <div class="cuisine-chip">Cakes</div>
+                </div>
+              </div>
+            </article>
+
+            <!-- Add more cards as needed -->
+
+          </div>
         </div>
-    </div>
-    
-    <!-- Success Modal -->
-    <div class="success-modal" id="successModal">
-        <div class="success-content">
-            <div class="success-icon">✓</div>
-            <h2>Order Placed 🎉</h2>
-            <p>Thank you!</p>
-            <button class="btn-view-order" onclick="viewLastOrder()">View Order Details</button>
-        </div>
-    </div>
-    
-    <!-- Order History Modal -->
-    <div class="order-history-modal" id="orderHistoryModal">
-        <div class="order-history-content">
-            <h2>Order History</h2>
-            <div id="orderHistoryList"></div>
-            <button class="btn-close-history" onclick="closeOrderHistory()">Close</button>
-        </div>
-    </div>
-    
-    <!-- ============================================ -->
-    <!-- JAVASCRIPT SECTION - ALL LOGIC GOES HERE -->
-    <!-- ============================================ -->
+
+        <aside class="right-col">
+          <div class="card-elev cart-summary">
+            <h3>Your Cart</h3>
+            <div class="cart-items" id="cartItems">
+              <div class="muted">No items yet — add something tasty!</div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
+              <div class="muted">Estimated total</div>
+              <div style="font-weight:700">₹0</div>
+            </div>
+            <div style="margin-top:12px"><button class="btn" id="checkoutBtn" disabled>Checkout</button></div>
+          </div>
+
+          <div style="height:12px"></div>
+
+          <div class="card-elev">
+            <h4 style="margin:0 0 8px 0">Filters</h4>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <div class="chip">Pure Veg</div>
+              <div class="chip">Online Payment</div>
+              <div class="chip">Rating 4.0+</div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </main>
+
+    <!-- Floating cart button + bottom nav -->
+    <button class="cart-fab" id="openCart" aria-label="Open cart">
+      <i class="fa-solid fa-bag-shopping"></i>
+      <div class="cart-count" id="cartCount">0</div>
+    </button>
+
+    <nav class="bottom-nav" role="navigation" aria-label="Main navigation">
+      <div class="bottom-nav-inner">
+        <div class="nav-btn active"><i class="fa-solid fa-house"></i><span>Home</span></div>
+        <div class="nav-btn"><i class="fa-solid fa-magnifying-glass"></i><span>Search</span></div>
+        <div class="nav-btn"><i class="fa-solid fa-receipt"></i><span>Orders</span></div>
+        <div class="nav-btn"><i class="fa-solid fa-tag"></i><span>Offers</span></div>
+        <div class="nav-btn"><i class="fa-solid fa-user"></i><span>Profile</span></div>
+      </div>
+    </nav>
+
     <script>
-        // ===== DATA SECTION - Products Database =====
-        // IMPORTANT: These are the ORIGINAL chip images from the initial document
-        const products = [
-            // Chips - ORIGINAL IMAGES RESTORED
-            { id: 1, name: "Lay's Magic Masala", price: 20, category: "chips", discount: "20% OFF", image: "https://images.unsplash.com/photo-1600952841320-db92ec4047ca?w=400&h=300&fit=crop&q=80" },
-            { id: 2, name: "Lay's Classic Salted", price: 20, category: "chips", discount: null, image: "https://images.unsplash.com/photo-1566478989037-eec170784d0b?w=400&h=300&fit=crop&q=80" },
-            { id: 3, name: "Lay's American Cream & Onion", price: 20, category: "chips", discount: null, image: "https://images.unsplash.com/photo-1621447504864-d8686e12698c?w=400&h=300&fit=crop&q=80" },
-            { id: 4, name: "Lay's Spanish Tomato Tango", price: 20, category: "chips", discount: "10% OFF", image: "https://images.unsplash.com/photo-1528751014936-863e6e7a319c?w=400&h=300&fit=crop&q=80" },
-            { id: 5, name: "Lay's Hot & Sweet Chilli", price: 20, category: "chips", discount: null, image: "https://images.unsplash.com/photo-1599490659213-e2b9527bd087?w=400&h=300&fit=crop&q=80" },
-            { id: 6, name: "Lay's India's Magic Masala", price: 20, category: "chips", discount: "15% OFF", image: "https://images.unsplash.com/photo-1613919113640-25732ec5e61f?w=400&h=300&fit=crop&q=80" },
-            { id: 7, name: "Lay's Sizzling BBQ", price: 20, category: "chips", discount: null, image: "https://images.unsplash.com/photo-1628191011227-0afb9fadc9e8?w=400&h=300&fit=crop&q=80" },
-            { id: 8, name: "Lay's West Indies' Hot & Sweet", price: 20, category: "chips", discount: null, image: "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=400&h=300&fit=crop&q=80" },
-            { id: 9, name: "Kurkure Masala Munch", price: 20, category: "chips", discount: "15% OFF", image: "https://images.unsplash.com/photo-1600952841320-db92ec4047ca?w=400&h=300&fit=crop&q=80&sat=-20&hue=30" },
-            { id: 10, name: "Kurkure Solid Masti", price: 20, category: "chips", discount: null, image: "https://images.unsplash.com/photo-1613919113640-25732ec5e61f?w=400&h=300&fit=crop&q=80&sat=-20" },
-            { id: 11, name: "Kurkure Chilli Chatka", price: 20, category: "chips", discount: null, image: "https://images.unsplash.com/photo-1599490659213-e2b9527bd087?w=400&h=300&fit=crop&q=80&sat=-20&hue=10" },
-            { id: 12, name: "Kurkure Green Chutney", price: 20, category: "chips", discount: "10% OFF", image: "https://images.unsplash.com/photo-1621939514649-280e2ee25f60?w=400&h=300&fit=crop&q=80&sat=-20&hue=80" },
-            { id: 13, name: "Kurkure Puffcorn Yummy Cheese", price: 20, category: "chips", discount: null, image: "https://images.unsplash.com/photo-1566478989037-eec170784d0b?w=400&h=300&fit=crop&q=80&sat=-20&hue=40" },
-            { id: 14, name: "Kurkure Naughty Tomato", price: 20, category: "chips", discount: null, image: "https://images.unsplash.com/photo-1528751014936-863e6e7a319c?w=400&h=300&fit=crop&q=80&sat=-20" },
-            { id: 15, name: "Kurkure Desi Beats", price: 20, category: "chips", discount: "12% OFF", image: "https://images.unsplash.com/photo-1621447504864-d8686e12698c?w=400&h=300&fit=crop&q=80&sat=-20&hue=20" },
-            { id: 16, name: "Bingo Mad Angles Masala", price: 20, category: "chips", discount: "20% OFF", image: "https://images.unsplash.com/photo-1613919113640-25732ec5e61f?w=400&h=300&fit=crop&q=80&brightness=1.1" },
-            { id: 17, name: "Bingo Mad Angles Achari Masti", price: 20, category: "chips", discount: null, image: "https://images.unsplash.com/photo-1599490659213-e2b9527bd087?w=400&h=300&fit=crop&q=80&brightness=1.1" },
-            { id: 18, name: "Bingo Mad Angles Pizza", price: 20, category: "chips", discount: null, image: "https://images.unsplash.com/photo-1621447504864-d8686e12698c?w=400&h=300&fit=crop&q=80&brightness=1.1" },
-            { id: 19, name: "Bingo Original Style Salted", price: 20, category: "chips", discount: null, image: "https://images.unsplash.com/photo-1566478989037-eec170784d0b?w=400&h=300&fit=crop&q=80&brightness=1.1" },
-            { id: 20, name: "Bingo Tangles Chilli Chatka", price: 20, category: "chips", discount: "15% OFF", image: "https://images.unsplash.com/photo-1628191011227-0afb9fadc9e8?w=400&h=300&fit=crop&q=80&brightness=1.1" },
-            { id: 21, name: "Bingo Tedhe Medhe Masala Tadka", price: 20, category: "chips", discount: null, image: "https://images.unsplash.com/photo-1600952841320-db92ec4047ca?w=400&h=300&fit=crop&q=80&brightness=1.1" },
-            { id: 22, name: "Bingo Yumitos Chataka Chaat", price: 20, category: "chips", discount: null, image: "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=400&h=300&fit=crop&q=80&brightness=1.1" },
-            { id: 23, name: "Too Yumm Multigrain Chips Classic", price: 20, category: "chips", discount: null, image: "https://images.unsplash.com/photo-1621939514649-280e2ee25f60?w=400&h=300&fit=crop&q=80" },
-            { id: 24, name: "Too Yumm Veggie Stix Herbs", price: 20, category: "chips", discount: "10% OFF", image: "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=400&h=300&fit=crop&q=80&hue=80" },
-            { id: 25, name: "Too Yumm Foxnuts Tangy Tomato", price: 20, category: "chips", discount: null, image: "https://images.unsplash.com/photo-1599490659213-e2b9527bd087?w=400&h=300&fit=crop&q=80&hue=10" },
-            { id: 26, name: "Too Yumm Karare Masala", price: 20, category: "chips", discount: null, image: "https://images.unsplash.com/photo-1628191011227-0afb9fadc9e8?w=400&h=300&fit=crop&q=80&hue=30" },
-            { id: 27, name: "Too Yumm Protein Chips Peri Peri", price: 20, category: "chips", discount: "15% OFF", image: "https://images.unsplash.com/photo-1613919113640-25732ec5e61f?w=400&h=300&fit=crop&q=80&hue=20" },
-            { id: 28, name: "Too Yumm Veggie Fingers", price: 20, category: "chips", discount: null, image: "https://images.unsplash.com/photo-1621447504864-d8686e12698c?w=400&h=300&fit=crop&q=80&hue=50" },
-            
-            // Drinks - UNCHANGED
-            { id: 29, name: "Coca-Cola", price: 40, category: "drinks", discount: null, image: "https://images.unsplash.com/photo-1554866585-cd94860890b7?w=400&h=300&fit=crop&q=80" },
-            { id: 30, name: "Pepsi", price: 40, category: "drinks", discount: null, image: "https://images.unsplash.com/photo-1629203851122-3726ecdf080e?w=400&h=300&fit=crop&q=80" },
-            { id: 31, name: "Sprite", price: 40, category: "drinks", discount: null, image: "https://images.unsplash.com/photo-1625772299848-391b6a87d7b3?w=400&h=300&fit=crop&q=80" },
-            { id: 32, name: "Fanta Orange", price: 40, category: "drinks", discount: null, image: "https://images.unsplash.com/photo-1624517452488-04869289c4ca?w=400&h=300&fit=crop&q=80" },
-            { id: 33, name: "Thumbs Up", price: 40, category: "drinks", discount: null, image: "https://images.unsplash.com/photo-1581636625402-29b2a704ef13?w=400&h=300&fit=crop&q=80" },
-            { id: 34, name: "Mountain Dew", price: 40, category: "drinks", discount: null, image: "https://images.unsplash.com/photo-1624517452488-04869289c4ca?w=400&h=300&fit=crop&q=80&hue=80" },
-            { id: 35, name: "Limca", price: 40, category: "drinks", discount: null, image: "https://images.unsplash.com/photo-1625772299848-391b6a87d7b3?w=400&h=300&fit=crop&q=80&hue=30" },
-            { id: 36, name: "Maaza Mango", price: 40, category: "drinks", discount: null, image: "https://images.unsplash.com/photo-1624517452488-04869289c4ca?w=400&h=300&fit=crop&q=80&hue=40" },
-            
-            // Chocolates - UNCHANGED
-            { id: 37, name: "Ferrero Rocher 3 Pieces", price: 150, category: "chocolates", discount: null, image: "https://images.unsplash.com/photo-1481391319762-47dff72954d9?w=400&h=300&fit=crop&q=80" },
-            { id: 38, name: "Ferrero Rocher 8 Pieces", price: 350, category: "chocolates", discount: "10% OFF", image: "https://images.unsplash.com/photo-1511381939415-e44015466834?w=400&h=300&fit=crop&q=80" },
-            { id: 39, name: "Ferrero Rocher 16 Pieces", price: 650, category: "chocolates", discount: "15% OFF", image: "https://images.unsplash.com/photo-1549007994-cb92caebd54b?w=400&h=300&fit=crop&q=80" },
-            { id: 40, name: "Ferrero Rocher 24 Pieces", price: 950, category: "chocolates", discount: "20% OFF", image: "https://images.unsplash.com/photo-1606312619070-d48b4cbc3e0d?w=400&h=300&fit=crop&q=80" },
-            { id: 41, name: "Ferrero Rondnoir 8 Pieces", price: 400, category: "chocolates", discount: null, image: "https://images.unsplash.com/photo-1590080876876-5c2ba3e4ac35?w=400&h=300&fit=crop&q=80" },
-            { id: 42, name: "Ferrero Collection 15 Pieces", price: 550, category: "chocolates", discount: "12% OFF", image: "https://images.unsplash.com/photo-1548848016-a2cf5d175fa3?w=400&h=300&fit=crop&q=80" },
-            { id: 43, name: "Ferrero Raffaello 15 Pieces", price: 500, category: "chocolates", discount: null, image: "https://images.unsplash.com/photo-1582058091505-f87a2e55a40f?w=400&h=300&fit=crop&q=80" },
-            { id: 44, name: "Dairy Milk Classic 55g", price: 60, category: "chocolates", discount: null, image: "https://images.unsplash.com/photo-1511381939415-e44015466834?w=400&h=300&fit=crop&q=80&hue=270" },
-            { id: 45, name: "Dairy Milk Fruit & Nut 36g", price: 50, category: "chocolates", discount: null, image: "https://images.unsplash.com/photo-1481391319762-47dff72954d9?w=400&h=300&fit=crop&q=80&hue=270" },
-            { id: 46, name: "Dairy Milk Crackle 36g", price: 50, category: "chocolates", discount: null, image: "https://images.unsplash.com/photo-1549007994-cb92caebd54b?w=400&h=300&fit=crop&q=80&hue=270" },
-            { id: 47, name: "Dairy Milk Roast Almond 36g", price: 50, category: "chocolates", discount: "5% OFF", image: "https://images.unsplash.com/photo-1606312619070-d48b4cbc3e0d?w=400&h=300&fit=crop&q=80&hue=270" },
-            { id: 48, name: "Dairy Milk Silk 60g", price: 90, category: "chocolates", discount: null, image: "https://images.unsplash.com/photo-1590080876876-5c2ba3e4ac35?w=400&h=300&fit=crop&q=80&hue=270" },
-            { id: 49, name: "Dairy Milk Silk Oreo 60g", price: 95, category: "chocolates", discount: "8% OFF", image: "https://images.unsplash.com/photo-1548848016-a2cf5d175fa3?w=400&h=300&fit=crop&q=80&hue=270" },
-            { id: 50, name: "Dairy Milk Silk Bubbly 50g", price: 85, category: "chocolates", discount: null, image: "https://images.unsplash.com/photo-1582058091505-f87a2e55a40f?w=400&h=300&fit=crop&q=80&hue=270" },
-            { id: 51, name: "Dairy Milk Silk Fruit & Nut 60g", price: 95, category: "chocolates", discount: null, image: "https://images.unsplash.com/photo-1511381939415-e44015466834?w=400&h=300&fit=crop&q=80&hue=280" },
-            { id: 52, name: "Dairy Milk Silk Caramello 60g", price: 95, category: "chocolates", discount: null, image: "https://images.unsplash.com/photo-1481391319762-47dff72954d9?w=400&h=300&fit=crop&q=80&hue=280" },
-            { id: 53, name: "Dairy Milk Silk Mousse 55g", price: 90, category: "chocolates", discount: "10% OFF", image: "https://images.unsplash.com/photo-1549007994-cb92caebd54b?w=400&h=300&fit=crop&q=80&hue=280" },
-            { id: 54, name: "5 Star 40g", price: 30, category: "chocolates", discount: null, image: "https://images.unsplash.com/photo-1606312619070-d48b4cbc3e0d?w=400&h=300&fit=crop&q=80&hue=30" },
-            { id: 55, name: "Perk 28g", price: 20, category: "chocolates", discount: null, image: "https://images.unsplash.com/photo-1590080876876-5c2ba3e4ac35?w=400&h=300&fit=crop&q=80&hue=30" },
-            { id: 56, name: "Bournville 80g", price: 150, category: "chocolates", discount: "12% OFF", image: "https://images.unsplash.com/photo-1548848016-a2cf5d175fa3?w=400&h=300&fit=crop&q=80&hue=10" },
-            { id: 57, name: "Cadbury Celebrations 118g", price: 200, category: "chocolates", discount: "15% OFF", image: "https://images.unsplash.com/photo-1582058091505-f87a2e55a40f?w=400&h=300&fit=crop&q=80&hue=280" },
-            
-            // Combos
-            { id: 58, name: "Chips + Pepsi Combo", price: 50, category: "combos", discount: "10% OFF", image: "https://images.unsplash.com/photo-1621939514649-280e2ee25f60?w=400&h=300&fit=crop&q=80" },
-            { id: 59, name: "Mega Snack Combo", price: 100, category: "combos", discount: "25% OFF", image: "https://images.unsplash.com/photo-1600490036275-fe035c7b1647?w=400&h=300&fit=crop&q=80" },
-            { id: 60, name: "Family Pack Combo", price: 150, category: "combos", discount: "20% OFF", image: "https://images.unsplash.com/photo-1600490036275-fe035c7b1647?w=400&h=300&fit=crop&q=80&brightness=1.1" },
-            { id: 61, name: "Party Mix Combo", price: 200, category: "combos", discount: "30% OFF", image: "https://images.unsplash.com/photo-1600490036275-fe035c7b1647?w=400&h=300&fit=crop&q=80&hue=20" },
-        ];
-        
-        // ===== STATE MANAGEMENT =====
-        let cart = [];
-        let currentCategory = 'all';
-        let orderHistory = [];
-        let selectedPayment = null;
-        let currentOrderData = null;
-        
-        // ===== APP INITIALIZATION FUNCTIONS =====
-        
-        // Function: Start the app after login
-        function startApp() {
-            const name = document.getElementById('userName').value.trim();
-            if (!name) {
-                alert('Please enter your name');
-                return;
-            }
-            document.getElementById('welcomeScreen').style.display = 'none';
-            document.getElementById('mainApp').style.display = 'block';
-            document.getElementById('cartIcon').style.display = 'flex';
-            renderProducts();
-        }
-        
-        // ===== PRODUCT DISPLAY FUNCTIONS =====
-        
-        // Function: Render product grid
-        function renderProducts() {
-            const grid = document.getElementById('productsGrid');
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            
-            const filtered = products.filter(p => {
-                const matchesCategory = currentCategory === 'all' || p.category === currentCategory;
-                const matchesSearch = p.name.toLowerCase().includes(searchTerm);
-                return matchesCategory && matchesSearch;
-            });
-            
-            grid.innerHTML = filtered.map(product => {
-                const cartItem = cart.find(item => item.id === product.id);
-                const quantity = cartItem ? cartItem.quantity : 0;
-                
-                return `
-                <div class="product-card">
-                    <div class="product-image">
-                        <img src="${product.image}" alt="${product.name}" />
-                        ${product.discount ? `<div class="discount-badge">${product.discount}</div>` : ''}
-                    </div>
-                    <div class="product-info">
-                        <div class="product-name">${product.name}</div>
-                        <div class="product-price">₹ ${product.price}</div>
-                        <div class="product-actions">
-                            <button class="product-qty-btn" onclick="updateProductQuantity(${product.id}, -1)" ${quantity === 0 ? 'disabled' : ''}>−</button>
-                            <div class="product-qty-display">${quantity}</div>
-                            <button class="product-qty-btn" onclick="updateProductQuantity(${product.id}, 1)">+</button>
-                        </div>
-                    </div>
-                </div>
-            `}).join('');
-        }
-        
-        // Function: Filter by category
-        function filterCategory(category) {
-            currentCategory = category;
-            document.querySelectorAll('.menu-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            event.target.closest('.menu-item').classList.add('active');
-            renderProducts();
-        }
-        
-        // ===== CART MANAGEMENT FUNCTIONS =====
-        
-        // Function: Update product quantity
-        function updateProductQuantity(productId, change) {
-            const product = products.find(p => p.id === productId);
-            const cartItem = cart.find(item => item.id === productId);
-            
-            if (change > 0) {
-                if (cartItem) {
-                    cartItem.quantity++;
-                } else {
-                    cart.push({ ...product, quantity: 1 });
-                }
-            } else if (change < 0 && cartItem) {
-                cartItem.quantity--;
-                if (cartItem.quantity === 0) {
-                    cart = cart.filter(item => item.id !== productId);
-                }
-            }
-            
-            updateCartCount();
-            renderProducts();
-        }
-        
-        // Function: Update cart badge count
-        function updateCartCount() {
-            const count = cart.reduce((sum, item) => sum + item.quantity, 0);
-            const cartCountEl = document.getElementById('cartCount');
-            cartCountEl.textContent = count;
-            cartCountEl.style.animation = 'none';
-            setTimeout(() => {
-                cartCountEl.style.animation = 'bounce 0.5s ease';
-            }, 10);
-        }
-        
-        // Function: Update quantity in checkout
-        function updateQuantity(productId, change) {
-            const cartItem = cart.find(item => item.id === productId);
-            if (cartItem) {
-                cartItem.quantity += change;
-                if (cartItem.quantity <= 0) {
-                    removeFromCart(productId);
-                } else {
-                    openCheckout();
-                    updateCartCount();
-                    renderProducts();
-                }
-            }
-        }
-        
-        // Function: Remove item from cart
-        function removeFromCart(productId) {
-            cart = cart.filter(item => item.id !== productId);
-            updateCartCount();
-            renderProducts();
-            if (cart.length === 0) {
-                closeCheckout();
-            } else {
-                openCheckout();
-            }
-        }
-        
-        // ===== CHECKOUT FUNCTIONS =====
-        
-        // Function: Open checkout modal
-        function openCheckout() {
-            if (cart.length === 0) {
-                alert('Your cart is empty!');
-                return;
-            }
-            
-            const cartItemsDiv = document.getElementById('cartItems');
-            cartItemsDiv.innerHTML = cart.map(item => `
-                <div class="cart-item">
-                    <div class="cart-item-info">
-                        <div class="cart-item-name">${item.name} × ${item.quantity}</div>
-                        <div class="cart-item-price">₹ ${item.price} each</div>
-                    </div>
-                    <div class="cart-item-controls">
-                        <button class="qty-btn" onclick="updateQuantity(${item.id}, -1)">−</button>
-                        <div class="qty-display">${item.quantity}</div>
-                        <button class="qty-btn" onclick="updateQuantity(${item.id}, 1)">+</button>
-                        <button class="remove-btn" onclick="removeFromCart(${item.id})">×</button>
-                    </div>
-                </div>
-            `).join('');
-            
-            updateCheckoutSummary();
-            document.getElementById('checkoutModal').style.display = 'flex';
-            selectedPayment = null;
-            document.querySelectorAll('.payment-option').forEach(opt => {
-                opt.classList.remove('selected');
-            });
-            validateCheckoutForm();
-        }
-        
-        // Function: Close checkout modal
-        function closeCheckout() {
-            document.getElementById('checkoutModal').style.display = 'none';
-        }
-        
-        // Function: Update checkout summary
-        function updateCheckoutSummary() {
-            const itemsTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            const deliveryFee = 10;
-            const grandTotal = itemsTotal + deliveryFee;
-            
-            document.getElementById('itemsTotal').textContent = `₹ ${itemsTotal}`;
-            document.getElementById('grandTotal').textContent = `₹ ${grandTotal}`;
-        }
-        
-        // ===== PAYMENT FUNCTIONS =====
-        
-        // Function: Select payment method
-        function selectPayment(method) {
-            selectedPayment = method;
-            document.querySelectorAll('.payment-option').forEach(opt => {
-                opt.classList.remove('selected');
-            });
-            event.target.closest('.payment-option').classList.add('selected');
-            validateCheckoutForm();
-        }
-        
-        // Function: Validate checkout form
-        function validateCheckoutForm() {
-            const phone = document.getElementById('phoneNumber').value.trim();
-            const address = document.getElementById('deliveryAddress').value.trim();
-            const placeOrderBtn = document.getElementById('placeOrderBtn');
-            
-            if (phone && address && selectedPayment) {
-                placeOrderBtn.disabled = false;
-            } else {
-                placeOrderBtn.disabled = true;
-            }
-        }
-        
-        // Function: Place order (main checkout handler)
-        function placeOrder() {
-            const phone = document.getElementById('phoneNumber').value.trim();
-            const address = document.getElementById('deliveryAddress').value.trim();
-            
-            if (!phone || !address) {
-                alert('Please fill in all delivery details');
-                return;
-            }
-            
-            if (!selectedPayment) {
-                alert('Please select a payment method');
-                return;
-            }
-            
-            // Calculate totals
-            const itemsTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            const deliveryFee = 10;
-            const grandTotal = itemsTotal + deliveryFee;
-            
-            // Store current order data
-            currentOrderData = {
-                id: Date.now(),
-                date: new Date().toLocaleString(),
-                items: [...cart],
-                phone: phone,
-                address: address,
-                paymentMethod: selectedPayment === 'upi' ? 'UPI Payment' : 'Cash on Delivery',
-                itemsTotal: itemsTotal,
-                deliveryFee: deliveryFee,
-                grandTotal: grandTotal
-            };
-            
-            // Handle payment method
-            if (selectedPayment === 'upi') {
-                // Show UPI payment modal
-                openUPIPayment(grandTotal);
-            } else {
-                // COD - Complete order immediately
-                completeOrder();
-            }
-        }
-        
-        // ===== UPI PAYMENT FUNCTIONS (REAL FLOW) =====
-        
-        // Function: Open UPI payment modal
-        function openUPIPayment(amount) {
-            document.getElementById('upiAmount').textContent = `₹ ${amount}`;
-            document.getElementById('checkoutModal').style.display = 'none';
-            document.getElementById('upiModal').style.display = 'flex';
-        }
-        
-        // Function: Process UPI payment (simulates real payment)
-        function processUPIPayment(app) {
-            // Hide app selection
-            document.querySelector('.upi-apps').style.display = 'none';
-            document.querySelector('.upi-actions').style.display = 'none';
-            document.getElementById('upiProcessing').style.display = 'block';
-            
-            // Simulate payment processing (3 seconds)
-            // In real implementation, this would trigger actual UPI intent/API
-            setTimeout(() => {
-                // Payment successful
-                document.getElementById('upiModal').style.display = 'none';
-                completeOrder();
-                
-                // Reset UPI modal for next use
-                setTimeout(() => {
-                    document.querySelector('.upi-apps').style.display = 'block';
-                    document.querySelector('.upi-actions').style.display = 'flex';
-                    document.getElementById('upiProcessing').style.display = 'none';
-                }, 500);
-            }, 3000);
-        }
-        
-        // Function: Cancel UPI payment
-        function cancelUPIPayment() {
-            document.getElementById('upiModal').style.display = 'none';
-            document.getElementById('checkoutModal').style.display = 'flex';
-        }
-        
-        // ===== ORDER COMPLETION FUNCTIONS =====
-        
-        // Function: Complete order (after successful payment or COD)
-        function completeOrder() {
-            // Add to order history
-            orderHistory.unshift(currentOrderData);
-            
-            // Show success modal
-            document.getElementById('successModal').style.display = 'flex';
-            
-            // Create confetti
-            for (let i = 0; i < 50; i++) {
-                const confetti = document.createElement('div');
-                confetti.className = 'confetti';
-                confetti.style.left = Math.random() * 100 + '%';
-                confetti.style.background = ['#ff6b35', '#ffd700', '#4caf50', '#2196f3'][Math.floor(Math.random() * 4)];
-                confetti.style.animationDelay = Math.random() * 3 + 's';
-                document.getElementById('successModal').appendChild(confetti);
-            }
-            
-            // Auto-close success modal and reset
-            setTimeout(() => {
-                document.getElementById('successModal').style.display = 'none';
-                document.querySelectorAll('.confetti').forEach(c => c.remove());
-                
-                // Reset cart and form
-                cart = [];
-                updateCartCount();
-                renderProducts();
-                document.getElementById('phoneNumber').value = '';
-                document.getElementById('deliveryAddress').value = '';
-                selectedPayment = null;
-                currentOrderData = null;
-            }, 3000);
-        }
-        
-        // Function: View last order
-        function viewLastOrder() {
-            document.getElementById('successModal').style.display = 'none';
-            document.querySelectorAll('.confetti').forEach(c => c.remove());
-            openOrderHistory();
-        }
-        
-        // ===== ORDER HISTORY FUNCTIONS =====
-        
-        // Function: Open order history
-        function openOrderHistory() {
-            const historyList = document.getElementById('orderHistoryList');
-            
-            if (orderHistory.length === 0) {
-                historyList.innerHTML = `
-                    <div class="empty-cart">
-                        <div class="empty-cart-icon">📦</div>
-                        <p>No orders yet!</p>
-                    </div>
-                `;
-            } else {
-                historyList.innerHTML = orderHistory.map((order, index) => `
-                    <div class="order-card">
-                        <div class="order-header">
-                            <div>
-                                <div class="order-number">Order #${orderHistory.length - index}</div>
-                                <div class="order-date">${order.date}</div>
-                            </div>
-                        </div>
-                        <div class="order-items-list">
-                            ${order.items.map(item => `
-                                <div class="order-item">
-                                    <img src="${item.image}" alt="${item.name}" class="order-item-image" />
-                                    <div class="order-item-details">
-                                        <div class="order-item-name">${item.name}</div>
-                                        <div class="order-item-qty">Quantity: ${item.quantity}</div>
-                                    </div>
-                                    <div class="order-item-price">₹ ${item.price * item.quantity}</div>
-                                </div>
-                            `).join('')}
-                        </div>
-                        <div class="order-total">
-                            <span class="order-total-label">Total (${order.paymentMethod}):</span>
-                            <span class="order-total-amount">₹ ${order.grandTotal}</span>
-                        </div>
-                    </div>
-                `).join('');
-            }
-            
-            document.getElementById('orderHistoryModal').style.display = 'flex';
-        }
-        
-        // Function: Close order history
-        function closeOrderHistory() {
-            document.getElementById('orderHistoryModal').style.display = 'none';
-        }
-        
-        // ===== UTILITY FUNCTIONS =====
-        
-        // Function: Toggle dark mode
-        function toggleDarkMode() {
-            document.body.classList.toggle('light-mode');
-        }
-        
-        // ===== EVENT LISTENERS =====
-        
-        // Search input listener
-        document.getElementById('searchInput').addEventListener('input', renderProducts);
-        
-        // Form validation listeners
-        document.getElementById('phoneNumber').addEventListener('input', validateCheckoutForm);
-        document.getElementById('deliveryAddress').addEventListener('input', validateCheckoutForm);
-        async function payWithRazorpay(totalAmount) {
-  // STEP 1: Create order from backend
-  const orderRes = await fetch("http://localhost:5000/create-order", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ amount: totalAmount })
-  });
+    // Simple interactions: chip toggle, search filter, add-to-cart demo
+    const chips = document.querySelectorAll('.chip');
+    chips.forEach(c=>c.addEventListener('click', ()=>{
+      chips.forEach(x=>x.classList.remove('active'));
+      c.classList.add('active');
+      // you could filter restaurants here based on chip
+    }));
 
-  const order = await orderRes.json();
-
-  // STEP 2: Open Razorpay
-  const options = {
-    key: "RAZORPAY_KEY_ID", // 🔴 replace with real key
-    amount: order.amount,
-    currency: "INR",
-    name: "SnackHub",
-    description: "Snack Order",
-    order_id: order.id,
-
-    handler: async function (response) {
-      // STEP 3: Verify payment
-      const verifyRes = await fetch("http://localhost:5000/verify-payment", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(response)
+    // Search filtering by name or cuisine
+    const searchInput = document.getElementById('searchInput');
+    const restaurantList = document.getElementById('restaurantList');
+    searchInput.addEventListener('input', ()=>{
+      const q = searchInput.value.trim().toLowerCase();
+      Array.from(restaurantList.children).forEach(card=>{
+        const name = card.dataset.name.toLowerCase();
+        const cuisines = card.dataset.cuisines.toLowerCase();
+        card.style.display = (name.includes(q) || cuisines.includes(q)) || q === '' ? 'flex' : 'none';
       });
+    });
 
-      const result = await verifyRes.json();
+    // Cart demo: clicking a restaurant card adds a sample item
+    const cartItemsEl = document.getElementById('cartItems');
+    const cartCountEl = document.getElementById('cartCount');
+    const checkoutBtn = document.getElementById('checkoutBtn');
+    let cart = [];
 
-      if (result.success) {
-        showSuccessScreen(); // 🔴 your existing success modal
-      } else {
-        alert("Payment verification failed");
+    function renderCart(){
+      cartItemsEl.innerHTML = '';
+      if(cart.length === 0){
+        cartItemsEl.innerHTML = '<div class="muted">No items yet — add something tasty!</div>';
+        cartCountEl.textContent = '0';
+        checkoutBtn.disabled = true;
+        return;
       }
-    },
+      cart.forEach((it, idx)=>{
+        const div = document.createElement('div');
+        div.className = 'cart-item';
+        div.innerHTML = `<img src="${it.img}" alt="${it.name}"><div style="flex:1"><div style=\"font-weight:700\">${it.name}</div><div class=\"meta\">₹${it.price} • ${it.qty}x</div></div><div style=\"display:flex;flex-direction:column;gap:6px\"><button class=\"btn\" data-idx=\"${idx}\">+</button><button style=\"background:#ff3b3b;color:#fff;border:0;padding:6px 8px;border-radius:8px;\" data-remove=\"${idx}\">Remove</button></div>`;
+        cartItemsEl.appendChild(div);
+      });
+      cartCountEl.textContent = cart.reduce((s,i)=>s+i.qty,0);
+      checkoutBtn.disabled = false;
+    }
 
-    theme: { color: "#ff6b35" },
-    method: { upi: true }
-  };
+    // Add to cart when clicking a restaurant card (demo behavior)
+    Array.from(restaurantList.children).forEach(card=>{
+      card.style.cursor = 'pointer';
+      card.addEventListener('click', ()=>{
+        const name = card.dataset.name;
+        const img = card.querySelector('img')?.src || '';
+        const item = {name: name + ' — Sample Item', price: Math.floor(Math.random()*200)+50, qty:1, img};
+        // If same name exists increment
+        const existing = cart.find(c=>c.name===item.name);
+        if(existing) existing.qty++;
+        else cart.push(item);
+        renderCart();
+        // small animation on cart count
+        cartCountEl.animate([{transform:'scale(1.2)'},{transform:'scale(1)'}],{duration:200});
+      });
+    });
 
-  const rzp = new Razorpay(options);
-  rzp.open();
-}
+    // Delegate cart item button clicks
+    cartItemsEl.addEventListener('click', (e)=>{
+      const plus = e.target.closest('button[data-idx]');
+      const rem = e.target.closest('button[data-remove]');
+      if(plus){
+        const idx = Number(plus.dataset.idx);
+        cart[idx].qty++;
+        renderCart();
+      }
+      if(rem){
+        const idx = Number(rem.dataset.remove);
+        cart.splice(idx,1);
+        renderCart();
+      }
+    });
+
+    // Open cart action (demo)
+    document.getElementById('openCart').addEventListener('click', ()=>{
+      window.scrollTo({top:0,behavior:'smooth'});
+      // focus right column checkout
+      const el = document.querySelector('.cart-summary');
+      if(el) el.animate([{transform:'translateY(-6px)'},{transform:'translateY(0)'}],{duration:200});
+    });
+
+    // Checkout demo
+    checkoutBtn.addEventListener('click', ()=>{
+      alert('Checkout flow not implemented in this demo.');
+    });
     </script>
 </body>
 </html>
